@@ -1,4 +1,4 @@
-# formart_conversion
+# format_conversion
 
 - **Version**: V1.0
 
@@ -10,7 +10,7 @@
 
 ## 项目简介
 
-formart_conversion: **格式转换工具**，提供了图片转换、从视频中提取帧以及将二进制文件转换为图片的功能。它利用PyQt5构建了GUI，并集成了PIL（Pillow）和OpenCV库用于图片和视频处理。
+format_conversion: **格式转换工具**，提供了图片转换、从视频中提取帧以及将二进制文件转换为图片的功能。它利用PyQt5构建了GUI，并集成了PIL（Pillow）和OpenCV库用于图片和视频处理。
 
 ## 功能特点
 1. **支持的操作:**
