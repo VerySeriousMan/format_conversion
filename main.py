@@ -4,101 +4,26 @@ Project Name: format_conversion
 File Created: 2024.06.14
 Author: ZhangYuetao
 File Name: main.py
-last renew 2024.06.20
+last renew: 2024.08.19
 """
 
-import os
 import sys
 import toml
 
 from convent_ware import Ui_MainWindow
-from bin_settings import Ui_Dialog
-from PyQt5.QtCore import QThread, pyqtSignal, QTimer
-from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QDialog
-from PyQt5 import QtGui
+from BinSetting import SettingsDialog
+from PyQt5.QtCore import QTimer
+from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
+from PyQt5 import QtGui, QtCore
+from utils import save_settings_to_toml
 import qt_material
-
-from image_convert import convert_image, convert_images
-from bin_to_image import bins_to_image, bins_to_images
-
-
-class Worker(QThread):
-    update_label = pyqtSignal(str)
-    error_label = pyqtSignal(str)
-
-    def __init__(self, file_path, save_path, process_type, target_format, nums=None):
-        super().__init__()
-        self.file_path = file_path
-        self.save_path = save_path
-        self.process_type = process_type
-        self.target_format = target_format
-        self.nums = nums
-
-    def run(self):
-        self.update_label.emit("格式转换进行中")
-        try:
-            if self.process_type == "convent_image":
-                if os.path.isdir(self.file_path):
-                    convert_images(self.file_path, self.save_path, self.target_format)
-                else:
-                    convert_image(self.file_path, self.save_path, self.target_format)
-            elif self.process_type == "video_to_image":
-                if os.path.isdir(self.file_path):
-                    videos_to_images(self.file_path, self.save_path, self.nums, self.target_format, self.error_label)
-                else:
-                    video_to_images(self.file_path, self.save_path, self.nums, self.target_format, self.error_label)
-            elif self.process_type == "bin_to_image":
-                if os.path.isdir(self.file_path):
-                    bins_to_images(self.file_path, self.save_path, self.target_format, self.error_label)
-                else:
-                    bins_to_image(self.file_path, self.save_path, self.target_format, self.error_label)
-            self.update_label.emit("格式转换完成")
-        except Exception as e:
-            self.error_label.emit(f"错误: {str(e)}")
-
-
-def save_settings_to_toml(width, height, channels, dtype):
-    settings_path = "bin_setting.toml"
-    settings = {
-        'width': int(width),
-        'height': int(height),
-        'channels': int(channels),
-        'dtype': dtype
-    }
-    with open(settings_path, 'w') as f:
-        toml.dump(settings, f)
-
-
-class SettingsDialog(QDialog, Ui_Dialog):
-    settings_accepted = pyqtSignal(str, str, str, str)
-
-    def __init__(self, width, height, channels, dtype, parent=None):
-        super(SettingsDialog, self).__init__(parent)
-        self.setupUi(self)
-        self.setWindowTitle("bin文件参数设置")
-        self.setWindowIcon(QtGui.QIcon("xey.ico"))
-
-        self.width_lineEdit.setText(str(width))
-        self.heigth_lineEdit.setText(str(height))
-        self.channels_lineEdit.setText(str(channels))
-        self.dtype_lineEdit.setText(dtype)
-
-        self.buttonBox.accepted.connect(self.accept_settings)
-
-    def accept_settings(self):
-        width_value = self.width_lineEdit.text()
-        height_value = self.heigth_lineEdit.text()
-        channels_value = self.channels_lineEdit.text()
-        dtype_value = self.dtype_lineEdit.text()
-        self.settings_accepted.emit(width_value, height_value, channels_value, dtype_value)
-        self.accept()
 
 
 class MyClass(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MyClass, self).__init__(parent)
         self.setupUi(self)
-        self.setWindowTitle("格式转化软件V1.1")
+        self.setWindowTitle("格式转化软件V1.2")
         self.setWindowIcon(QtGui.QIcon("xey.ico"))
 
         self.file_path = None
@@ -121,6 +46,7 @@ class MyClass(QMainWindow, Ui_MainWindow):
         self.animation_index = 0
 
     def open_settings_dialog(self):
+        self.info_label.clear()
         settings_path = "bin_setting.toml"
 
         with open(settings_path, 'r') as f:
@@ -141,26 +67,29 @@ class MyClass(QMainWindow, Ui_MainWindow):
 
     def open_file(self):
         file_path = QFileDialog.getOpenFileName(self)[0]
-        self.file_path = file_path
-        self.input_dir_label.clear()
-        self.info_label.clear()
-        self.error_label.clear()
-        self.input_file_label.setText("已导入文件")
+        if file_path:
+            self.file_path = file_path
+            self.input_dir_label.clear()
+            self.info_label.clear()
+            self.error_label.clear()
+            self.input_file_label.setText("已导入文件")
 
     def open_dir(self):
         dir_path = QFileDialog.getExistingDirectory(self)
-        self.file_path = dir_path
-        self.input_file_label.clear()
-        self.info_label.clear()
-        self.error_label.clear()
-        self.input_dir_label.setText("已导入文件夹")
+        if dir_path:
+            self.file_path = dir_path
+            self.input_file_label.clear()
+            self.info_label.clear()
+            self.error_label.clear()
+            self.input_dir_label.setText("已导入文件夹")
 
     def save_file(self):
         save_path = QFileDialog.getExistingDirectory(self)
-        self.save_path = save_path
-        self.info_label.clear()
-        self.error_label.clear()
-        self.save_path_label.setText("已设置保存地址")
+        if save_path:
+            self.save_path = save_path
+            self.info_label.clear()
+            self.error_label.clear()
+            self.save_path_label.setText("已设置保存地址")
 
     def click_convent_image(self):
         self.info_label.clear()
@@ -230,9 +159,11 @@ class MyClass(QMainWindow, Ui_MainWindow):
 
 
 if __name__ == "__main__":
+    QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)  # 自适应适配不同分辨率
+    QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps)
     app = QApplication(sys.argv)
 
-    from video_to_image import video_to_images, videos_to_images  # 延迟导入，解决pyqt5与opencv线程冲突问题
+    from WorkerThread import Worker  # 延迟导入，解决pyqt5与opencv线程冲突问题
 
     myWin = MyClass()
     qt_material.apply_stylesheet(app, theme='default')

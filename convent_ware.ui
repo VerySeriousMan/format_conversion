@@ -6,260 +6,282 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>551</width>
-    <height>324</height>
+    <width>500</width>
+    <height>300</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="nums_label">
-    <property name="geometry">
-     <rect>
-      <x>280</x>
-      <y>70</y>
-      <width>140</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>每秒数量/GIF总数</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="submit_button">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>230</y>
-      <width>120</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>转换</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="input_dir_button">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>70</y>
-      <width>120</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>导入文件夹</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="input_file_button">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>10</y>
-      <width>120</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>导入文件</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="save_path_button">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>130</y>
-      <width>120</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>保存地址</string>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="target_format_box">
-    <property name="geometry">
-     <rect>
-      <x>390</x>
-      <y>10</y>
-      <width>140</width>
-      <height>40</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="target_format_label">
-    <property name="geometry">
-     <rect>
-      <x>289</x>
-      <y>10</y>
-      <width>91</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>保存格式</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="info_label">
-    <property name="geometry">
-     <rect>
-      <x>370</x>
-      <y>180</y>
-      <width>170</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="nums_doubleSpinBox">
-    <property name="geometry">
-     <rect>
-      <x>430</x>
-      <y>70</y>
-      <width>100</width>
-      <height>40</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="input_file_label">
-    <property name="geometry">
-     <rect>
-      <x>150</x>
-      <y>10</y>
-      <width>120</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="input_dir_label">
-    <property name="geometry">
-     <rect>
-      <x>150</x>
-      <y>70</y>
-      <width>120</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="save_path_label">
-    <property name="geometry">
-     <rect>
-      <x>150</x>
-      <y>130</y>
-      <width>120</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="bin_to_image_checkBox">
-    <property name="geometry">
-     <rect>
-      <x>255</x>
-      <y>180</y>
-      <width>115</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>bin转图片</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="video_to_image_checkBox">
-    <property name="geometry">
-     <rect>
-      <x>145</x>
-      <y>180</y>
-      <width>110</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>视频抽帧</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="convent_image_checkBox">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>180</y>
-      <width>135</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>图片格式转换</string>
-    </property>
-    <property name="shortcut">
-     <string notr="true"/>
-    </property>
-   </widget>
-   <widget class="QLabel" name="error_label">
-    <property name="geometry">
-     <rect>
-      <x>150</x>
-      <y>230</y>
-      <width>391</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="bin_settings_button">
-    <property name="geometry">
-     <rect>
-      <x>380</x>
-      <y>130</y>
-      <width>150</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>bin文件参数设置</string>
-    </property>
-   </widget>
+   <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1,1,1,1">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,3,2,3">
+      <item>
+       <widget class="QPushButton" name="input_file_button">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>导入文件</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="input_file_label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="target_format_label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>保存格式</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="target_format_box">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="3,3,3,2">
+      <item>
+       <widget class="QPushButton" name="input_dir_button">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>导入文件夹</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="input_dir_label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="nums_label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>每秒数量/GIF总数</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QDoubleSpinBox" name="nums_doubleSpinBox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="3,4,4">
+      <item>
+       <widget class="QPushButton" name="save_path_button">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>保存地址</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="save_path_label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="bin_settings_button">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>bin文件参数设置</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="3,3,3,4">
+      <item>
+       <widget class="QCheckBox" name="convent_image_checkBox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>图片格式转换</string>
+        </property>
+        <property name="shortcut">
+         <string notr="true"/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="video_to_image_checkBox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>视频抽帧</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="bin_to_image_checkBox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>bin转图片</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="info_label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="3,7">
+      <item>
+       <widget class="QPushButton" name="submit_button">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>转换</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="error_label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>551</width>
+     <width>500</width>
      <height>23</height>
     </rect>
    </property>

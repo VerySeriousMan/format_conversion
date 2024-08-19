@@ -5,7 +5,7 @@ Project Name: format_conversion
 File Created: 2024.06.14
 Author: ZhangYuetao
 File Name: video_to_image.py
-last renew 2024.06.19
+last renew 2024.08.19
 """
 
 import cv2
@@ -44,6 +44,8 @@ def video_to_images(input_path, output_path, nums, target_format, error_label=No
         fps = video.get(cv2.CAP_PROP_FPS)  # 获取帧率
         total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))  # 获取总帧数
 
+        old_filename = input_path.split('/')[-1]
+
         if target_format.lower() == "gif":
             nums = int(nums)
             segment_frames = total_frames // nums
@@ -60,7 +62,7 @@ def video_to_images(input_path, output_path, nums, target_format, error_label=No
                     frame_count += 1
 
                 if frames:
-                    gif_path = os.path.join(output_path, f"segment_{i + 1:02d}.gif")
+                    gif_path = os.path.join(output_path, f"{old_filename}_{i + 1:02d}.gif")
                     frames[0].save(gif_path, save_all=True, append_images=frames[1:], loop=0, duration=int(1000 / fps))
                     extracted_count += 1
 
@@ -68,8 +70,8 @@ def video_to_images(input_path, output_path, nums, target_format, error_label=No
             print(f"Extracted {extracted_count} GIFs from the video {input_path}.")
 
         else:
-            interval = max(int(fps / nums), 1)
-            frame_count = 0
+            time_interval = 1.0 / nums  # 每帧的时间间隔
+            current_time = 0.0
             extracted_count = 0
 
             while True:
@@ -77,12 +79,13 @@ def video_to_images(input_path, output_path, nums, target_format, error_label=No
                 if not ret:
                     break
 
-                if frame_count % interval == 0:
-                    filename = os.path.join(output_path, f"frame_{extracted_count:04d}.{target_format.lower()}")
+                current_time += 1.0 / fps  # 当前时间累积
+
+                if current_time >= time_interval:
+                    current_time -= time_interval  # 重置当前时间
+                    filename = os.path.join(output_path, f"{old_filename}_{extracted_count:04d}.{target_format.lower()}")
                     cv2.imwrite(filename, frame)
                     extracted_count += 1
-
-                frame_count += 1
 
             video.release()
             print(f"Extracted {extracted_count} frames from the video {input_path}.")
