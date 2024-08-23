@@ -5,7 +5,7 @@ Project Name: format_conversion
 File Created: 2024.06.14
 Author: ZhangYuetao
 File Name: video_to_image.py
-last renew 2024.08.19
+last renew 2024.08.23
 """
 
 import cv2
@@ -83,8 +83,9 @@ def video_to_images(input_path, output_path, nums, target_format, error_label=No
 
                 if current_time >= time_interval:
                     current_time -= time_interval  # 重置当前时间
-                    filename = os.path.join(output_path, f"{old_filename}_{extracted_count:04d}.{target_format.lower()}")
-                    cv2.imwrite(filename, frame)
+                    filepath = os.path.join(output_path, f"{old_filename}_{extracted_count:04d}.{target_format.lower()}")
+                    filepath = filepath.replace('\\', '/')
+                    cv2.imwrite(filepath, frame)
                     extracted_count += 1
 
             video.release()
@@ -92,13 +93,18 @@ def video_to_images(input_path, output_path, nums, target_format, error_label=No
     except Exception as e:
         if error_label:
             error_label.emit(f"错误: {str(e)}")
+        else:
+            print(f"Error: {str(e)}")
 
 
 def videos_to_images(input_folder, output_folder, nums, target_format, error_label=None):
     for root, dirs, files in os.walk(input_folder):
         for file in files:
-            input_path = os.path.join(root, file)
-            output_path = root.replace(input_folder, output_folder)
+            input_path = os.path.join(root, file).replace('\\', '/')
+            output_path = root.replace(input_folder, output_folder).replace('\\', '/')
+            # 创建输出路径的目录
+            if not os.path.exists(output_path):
+                os.makedirs(output_path)
             video_to_images(input_path, output_path, nums, target_format, error_label)
 
 
