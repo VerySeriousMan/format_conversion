@@ -4,7 +4,7 @@ Project Name: format_conversion
 File Created: 2024.08.19
 Author: ZhangYuetao
 File Name: WorkerThread.py
-last renew: 2024.08.19
+Update: 2024.10.30
 """
 
 import os
@@ -14,6 +14,7 @@ from PyQt5.QtCore import QThread, pyqtSignal
 from image_convert import convert_image, convert_images
 from bin_to_image import bins_to_image, bins_to_images
 from video_to_image import video_to_images, videos_to_images
+from image_to_bin import image_to_bin, images_to_bins
 
 
 class Worker(QThread):
@@ -46,6 +47,12 @@ class Worker(QThread):
                     bins_to_images(self.file_path, self.save_path, self.target_format, self.error_label)
                 else:
                     bins_to_image(self.file_path, self.save_path, self.target_format, self.error_label)
+            elif self.process_type == "image_to_bin":
+                if os.path.isdir(self.file_path):
+                    images_to_bins(self.file_path, self.save_path, self.error_label)
+                else:
+                    image_to_bin(self.file_path, self.save_path, self.error_label)
             self.update_label.emit("格式转换完成")
         except Exception as e:
+            self.update_label.emit("格式转换中断")
             self.error_label.emit(f"错误: {str(e)}")

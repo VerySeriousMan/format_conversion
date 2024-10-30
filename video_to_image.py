@@ -5,12 +5,13 @@ Project Name: format_conversion
 File Created: 2024.06.14
 Author: ZhangYuetao
 File Name: video_to_image.py
-last renew 2024.08.23
+Update: 2024.10.29
 """
 
 import cv2
 import os
 from PIL import Image
+from utils import is_video
 
 
 def get_video_fps(video_path):
@@ -21,11 +22,6 @@ def get_video_fps(video_path):
     fps = video.get(cv2.CAP_PROP_FPS)
     video.release()
     return fps
-
-
-def is_video(file_name):
-    video_extensions = ['.mp4', '.avi', '.mov', '.mkv', '.flv', '.wmv']
-    return any(file_name.lower().endswith(ext) for ext in video_extensions)
 
 
 def video_to_images(input_path, output_path, nums, target_format, error_label=None):

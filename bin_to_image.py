@@ -5,7 +5,7 @@ Project Name: format_conversion
 File Created: 2024.06.18
 Author: ZhangYuetao
 File Name: bin_to_image.py
-last renew 2024.06.19
+Update: 2024.10.29
 """
 
 from PIL import Image
@@ -13,9 +13,7 @@ import os
 import toml
 import numpy as np
 
-
-def is_bin(file_name):
-    return file_name.lower().endswith('.bin')
+from utils import is_bin
 
 
 def bins_to_image(input_path, output_path, target_format, error_label=None):

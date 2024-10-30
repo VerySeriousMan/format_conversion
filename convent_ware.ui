@@ -75,7 +75,7 @@
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="3,3,3,2">
+     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="3,4,2,2">
       <item>
        <widget class="QPushButton" name="input_dir_button">
         <property name="sizePolicy">
@@ -114,7 +114,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>每秒数量/GIF总数</string>
+         <string>每秒数量</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -180,7 +180,7 @@
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="3,3,3,4">
+     <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="3,3,3,3,5">
       <item>
        <widget class="QCheckBox" name="convent_image_checkBox">
         <property name="sizePolicy">
@@ -220,6 +220,19 @@
         </property>
         <property name="text">
          <string>bin转图片</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="image_to_bin_checkBox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>图片转bin</string>
         </property>
        </widget>
       </item>

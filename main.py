@@ -4,7 +4,7 @@ Project Name: format_conversion
 File Created: 2024.06.14
 Author: ZhangYuetao
 File Name: main.py
-last renew: 2024.08.19
+Update: 2024.10.30
 """
 
 import sys
@@ -23,14 +23,14 @@ class MyClass(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MyClass, self).__init__(parent)
         self.setupUi(self)
-        self.setWindowTitle("格式转化软件V1.2")
+        self.setWindowTitle("格式转化软件V1.3")
         self.setWindowIcon(QtGui.QIcon("xey.ico"))
 
         self.file_path = None
         self.save_path = None
         self.process_type = None
 
-        self.target_format_box.addItems(['jpeg', 'bmp', 'png', 'gif', 'tiff'])
+        self.target_format_box.addItems(['jpeg', 'bmp', 'png', 'tiff'])
 
         self.input_file_button.clicked.connect(self.open_file)
         self.input_dir_button.clicked.connect(self.open_dir)
@@ -40,10 +40,34 @@ class MyClass(QMainWindow, Ui_MainWindow):
         self.convent_image_checkBox.clicked.connect(self.click_convent_image)
         self.video_to_image_checkBox.clicked.connect(self.click_video_to_image)
         self.bin_to_image_checkBox.clicked.connect(self.click_bin_to_image)
+        self.image_to_bin_checkBox.clicked.connect(self.click_image_to_bin)
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_animation)
         self.animation_index = 0
+        self.init_input()
+
+    def init_input(self):
+        self.control_enabled(False)
+        self.input_file_label.setText('请先导入待处理文件(夹)')
+
+    def init_save_path(self):
+        self.input_file_label.clear()
+        self.save_path_button.setEnabled(True)
+        self.save_path_label.setText('请设置保存地址')
+
+    def control_enabled(self, enable):
+        self.save_path_button.setEnabled(enable)
+        self.target_format_box.setEnabled(enable)
+        self.target_format_label.setEnabled(enable)
+        self.nums_doubleSpinBox.setEnabled(enable)
+        self.nums_label.setEnabled(enable)
+        self.bin_settings_button.setEnabled(enable)
+        self.convent_image_checkBox.setEnabled(enable)
+        self.video_to_image_checkBox.setEnabled(enable)
+        self.bin_to_image_checkBox.setEnabled(enable)
+        self.image_to_bin_checkBox.setEnabled(enable)
+        self.submit_button.setEnabled(enable)
 
     def open_settings_dialog(self):
         self.info_label.clear()
@@ -72,6 +96,7 @@ class MyClass(QMainWindow, Ui_MainWindow):
             self.input_dir_label.clear()
             self.info_label.clear()
             self.error_label.clear()
+            self.init_save_path()
             self.input_file_label.setText("已导入文件")
 
     def open_dir(self):
@@ -81,6 +106,7 @@ class MyClass(QMainWindow, Ui_MainWindow):
             self.input_file_label.clear()
             self.info_label.clear()
             self.error_label.clear()
+            self.init_save_path()
             self.input_dir_label.setText("已导入文件夹")
 
     def save_file(self):
@@ -89,6 +115,7 @@ class MyClass(QMainWindow, Ui_MainWindow):
             self.save_path = save_path
             self.info_label.clear()
             self.error_label.clear()
+            self.control_enabled(True)
             self.save_path_label.setText("已设置保存地址")
 
     def click_convent_image(self):
@@ -97,6 +124,12 @@ class MyClass(QMainWindow, Ui_MainWindow):
             self.process_type = 'convent_image'
             self.video_to_image_checkBox.setChecked(False)
             self.bin_to_image_checkBox.setChecked(False)
+            self.image_to_bin_checkBox.setChecked(False)
+            self.bin_settings_button.setEnabled(False)
+            self.nums_label.setEnabled(False)
+            self.nums_doubleSpinBox.setEnabled(False)
+            self.target_format_label.setEnabled(True)
+            self.target_format_box.setEnabled(True)
         else:
             self.process_type = None
 
@@ -106,6 +139,12 @@ class MyClass(QMainWindow, Ui_MainWindow):
             self.process_type = 'video_to_image'
             self.convent_image_checkBox.setChecked(False)
             self.bin_to_image_checkBox.setChecked(False)
+            self.image_to_bin_checkBox.setChecked(False)
+            self.bin_settings_button.setEnabled(False)
+            self.nums_label.setEnabled(True)
+            self.nums_doubleSpinBox.setEnabled(True)
+            self.target_format_label.setEnabled(True)
+            self.target_format_box.setEnabled(True)
         else:
             self.process_type = None
 
@@ -115,6 +154,27 @@ class MyClass(QMainWindow, Ui_MainWindow):
             self.process_type = 'bin_to_image'
             self.convent_image_checkBox.setChecked(False)
             self.video_to_image_checkBox.setChecked(False)
+            self.image_to_bin_checkBox.setChecked(False)
+            self.bin_settings_button.setEnabled(True)
+            self.nums_label.setEnabled(False)
+            self.nums_doubleSpinBox.setEnabled(False)
+            self.target_format_label.setEnabled(True)
+            self.target_format_box.setEnabled(True)
+        else:
+            self.process_type = None
+
+    def click_image_to_bin(self):
+        self.info_label.clear()
+        if self.image_to_bin_checkBox.isChecked():
+            self.process_type = 'image_to_bin'
+            self.convent_image_checkBox.setChecked(False)
+            self.video_to_image_checkBox.setChecked(False)
+            self.bin_to_image_checkBox.setChecked(False)
+            self.bin_settings_button.setEnabled(False)
+            self.nums_label.setEnabled(False)
+            self.nums_doubleSpinBox.setEnabled(False)
+            self.target_format_label.setEnabled(False)
+            self.target_format_box.setEnabled(False)
         else:
             self.process_type = None
 

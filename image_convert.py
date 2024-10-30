@@ -5,16 +5,13 @@ Project Name: format_conversion
 File Created: 2024.06.13
 Author: ZhangYuetao
 File Name: image_convert.py
-last renew 2024.06.19
+Update: 2024.10.29
 """
 
 from PIL import Image
 import os
 
-
-def is_image(file_name):
-    image_extensions = ['.jpg', '.jpeg', '.bmp', '.png', '.gif', '.tiff']
-    return any(file_name.lower().endswith(ext) for ext in image_extensions)
+from utils import is_image
 
 
 def convert_image(input_path, output_path, target_format):
@@ -33,6 +30,7 @@ def convert_image(input_path, output_path, target_format):
 
         filename = os.path.basename(input_path)
         output_file_path = os.path.join(output_path, os.path.splitext(filename)[0] + '.' + target_format.lower())
+
         img.save(output_file_path, target_format.upper())
 
 

@@ -4,7 +4,7 @@ Project Name: format_conversion
 File Created: 2024.08.19
 Author: ZhangYuetao
 File Name: BinSetting.py
-last renew: 2024.08.19
+Update: 2024.08.19
 """
 
 from bin_settings import Ui_Dialog
