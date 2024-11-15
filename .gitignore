@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 
 /settings/.secret.toml
+.idea/
 
 # C extensions
 *.so

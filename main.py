@@ -71,8 +71,10 @@ class MyClass(QMainWindow, Ui_MainWindow):
             shutil.copy2(self.current_software_path, old_dir_path)
             new_file_path = os.path.join(old_dir_path, os.path.basename(self.current_software_path))
             if os.path.exists(new_file_path) and server_connect.is_file_complete(new_file_path):
-                reply = QMessageBox.question(self, '更新完成', '软件更新完成，需要立即重启吗？',
-                                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                msg_box = QMessageBox(self)  # 创建一个新的 QMessageBox 对象
+                reply = msg_box.question(self, '更新完成', '软件更新完成，需要立即重启吗？',
+                                         QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                msg_box.raise_()  # 确保弹窗显示在最上层
 
                 if reply == QMessageBox.Yes:
                     subprocess.Popen(new_file_path)
@@ -143,8 +145,10 @@ class MyClass(QMainWindow, Ui_MainWindow):
             QMessageBox.information(self, '更新提示', '当前已为最新版本')
         else:
             # 弹出提示框，询问是否立即更新
-            reply = QMessageBox.question(self, '更新提示', '发现新版本，开始更新吗？',
-                                         QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            msg_box = QMessageBox(self)  # 创建一个新的 QMessageBox 对象
+            reply = msg_box.question(self, '更新提示', '发现新版本，开始更新吗？',
+                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            msg_box.raise_()  # 确保弹窗显示在最上层
 
             if reply == QMessageBox.Yes:
                 try:
@@ -273,7 +277,7 @@ class MyClass(QMainWindow, Ui_MainWindow):
         if self.file_path is not None and self.save_path is not None and self.process_type is not None:
             if self.process_type == "video_to_image":
                 nums = float(self.nums_doubleSpinBox.text())
-            self.worker = Worker(self.file_path, self.save_path, self.process_type,  target_format, nums)
+            self.worker = Worker(self.file_path, self.save_path, self.process_type, target_format, nums)
             self.worker.update_label.connect(self.update_info_label)
             self.worker.error_label.connect(self.update_error_label)
             self.worker.finished.connect(self.stop_animation)
