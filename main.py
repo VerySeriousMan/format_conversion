@@ -4,18 +4,22 @@ Project Name: format_conversion
 File Created: 2024.06.14
 Author: ZhangYuetao
 File Name: main.py
-Update: 2024.10.30
+Update: 2024.11.15
 """
-
+import os.path
+import shutil
+import subprocess
 import sys
+import time
 import toml
 
 from convent_ware import Ui_MainWindow
 from BinSetting import SettingsDialog
 from PyQt5.QtCore import QTimer
-from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox
 from PyQt5 import QtGui, QtCore
 from utils import save_settings_to_toml
+import server_connect
 import qt_material
 
 
@@ -23,12 +27,14 @@ class MyClass(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MyClass, self).__init__(parent)
         self.setupUi(self)
-        self.setWindowTitle("格式转化软件V1.3")
+        self.setWindowTitle("格式转化软件V1.4")
         self.setWindowIcon(QtGui.QIcon("xey.ico"))
 
         self.file_path = None
         self.save_path = None
         self.process_type = None
+        self.current_software_path = self.get_file_path()
+        self.current_software_version = server_connect.get_current_software_version(self.current_software_path)
 
         self.target_format_box.addItems(['jpeg', 'bmp', 'png', 'tiff'])
 
@@ -41,11 +47,51 @@ class MyClass(QMainWindow, Ui_MainWindow):
         self.video_to_image_checkBox.clicked.connect(self.click_video_to_image)
         self.bin_to_image_checkBox.clicked.connect(self.click_bin_to_image)
         self.image_to_bin_checkBox.clicked.connect(self.click_image_to_bin)
+        self.software_update_action.triggered.connect(self.update_software)
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_animation)
         self.animation_index = 0
         self.init_input()
+
+        # # 延迟调用 auto_update
+        # QTimer.singleShot(0, self.auto_update)
+        self.auto_update()
+        self.init_update()
+
+    def init_update(self):
+        dir_path = os.path.dirname(self.current_software_path)
+        dir_name = os.path.basename(dir_path)
+        if dir_name == 'temp':
+            old_dir_path = os.path.dirname(dir_path)
+            for file in os.listdir(old_dir_path):
+                if file.endswith('.exe'):
+                    old_software = os.path.join(old_dir_path, file)
+                    os.remove(old_software)
+            shutil.copy2(self.current_software_path, old_dir_path)
+            new_file_path = os.path.join(old_dir_path, os.path.basename(self.current_software_path))
+            if os.path.exists(new_file_path) and server_connect.is_file_complete(new_file_path):
+                reply = QMessageBox.question(self, '更新完成', '软件更新完成，需要立即重启吗？',
+                                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+                if reply == QMessageBox.Yes:
+                    subprocess.Popen(new_file_path)
+                    time.sleep(1)
+                    sys.exit("程序已退出")
+                else:
+                    sys.exit("程序已退出")
+        else:
+            is_updated = 0
+            for file in os.listdir(dir_path):
+                if file == 'temp':
+                    is_updated = 1
+                    shutil.rmtree(file)
+            if is_updated == 1:
+                try:
+                    text = server_connect.get_update_log('格式转换软件')
+                    QMessageBox.information(self, '更新成功', f'更新成功！\n{text}')
+                except Exception as e:
+                    QMessageBox.critical(self, '更新成功', f'日志加载失败: {str(e)}')
 
     def init_input(self):
         self.control_enabled(False)
@@ -69,9 +115,50 @@ class MyClass(QMainWindow, Ui_MainWindow):
         self.image_to_bin_checkBox.setEnabled(enable)
         self.submit_button.setEnabled(enable)
 
+    @staticmethod
+    def get_file_path():
+        # 检查是否是打包后的程序
+        if getattr(sys, 'frozen', False):
+            # PyInstaller 打包后的路径
+            current_path = os.path.abspath(sys.argv[0])
+        else:
+            # 非打包情况下的路径
+            current_path = os.path.abspath(__file__)
+        return current_path
+
+    def auto_update(self):
+        dir_path = os.path.dirname(self.current_software_path)
+        dir_name = os.path.basename(dir_path)
+        if dir_name != 'temp':
+            if server_connect.check_version(self.current_software_version) == 1:
+                self.update_software()
+
+    def update_software(self):
+        update_way = server_connect.check_version(self.current_software_version)
+        if update_way == -1:
+            # 网络未连接，弹出提示框
+            QMessageBox.warning(self, '更新提示', '网络未连接，暂时无法更新')
+        elif update_way == 0:
+            # 当前已为最新版本，弹出提示框
+            QMessageBox.information(self, '更新提示', '当前已为最新版本')
+        else:
+            # 弹出提示框，询问是否立即更新
+            reply = QMessageBox.question(self, '更新提示', '发现新版本，开始更新吗？',
+                                         QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+            if reply == QMessageBox.Yes:
+                try:
+                    server_connect.update_software(os.path.dirname(self.current_software_path), '格式转换软件')
+                    text = server_connect.get_update_log('格式转换软件')
+                    QMessageBox.information(self, '更新成功', f'更新成功！\n{text}')
+                except Exception as e:
+                    QMessageBox.critical(self, '更新失败', f'更新失败: {str(e)}')
+            else:
+                pass
+
     def open_settings_dialog(self):
         self.info_label.clear()
-        settings_path = "bin_setting.toml"
+        settings_path = r"settings/bin_setting.toml"
 
         with open(settings_path, 'r') as f:
             settings = toml.load(f)

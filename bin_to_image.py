@@ -5,7 +5,7 @@ Project Name: format_conversion
 File Created: 2024.06.18
 Author: ZhangYuetao
 File Name: bin_to_image.py
-Update: 2024.10.29
+Update: 2024.11.14
 """
 
 from PIL import Image
@@ -21,7 +21,7 @@ def bins_to_image(input_path, output_path, target_format, error_label=None):
         if not is_bin(input_path):
             return
 
-        settings_path = "bin_setting.toml"
+        settings_path = "settings/bin_setting.toml"
 
         with open(settings_path, 'r') as f:
             settings = toml.load(f)

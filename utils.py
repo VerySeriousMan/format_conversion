@@ -4,14 +4,14 @@ Project Name: format_conversion
 File Created: 2024.08.19
 Author: ZhangYuetao
 File Name: utils.py
-Update: 2024.08.19
+Update: 2024.11.14
 """
 
 import toml
 
 
 def save_settings_to_toml(width, height, channels, dtype):
-    settings_path = "bin_setting.toml"
+    settings_path = "settings/bin_setting.toml"
     settings = {
         'width': int(width),
         'height': int(height),
