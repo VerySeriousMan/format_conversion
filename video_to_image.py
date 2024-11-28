@@ -5,7 +5,7 @@ Project Name: format_conversion
 File Created: 2024.06.14
 Author: ZhangYuetao
 File Name: video_to_image.py
-Update: 2024.10.29
+Update: 2024.11.28
 """
 
 import cv2
@@ -81,7 +81,8 @@ def video_to_images(input_path, output_path, nums, target_format, error_label=No
                     current_time -= time_interval  # 重置当前时间
                     filepath = os.path.join(output_path, f"{old_filename}_{extracted_count:04d}.{target_format.lower()}")
                     filepath = filepath.replace('\\', '/')
-                    cv2.imwrite(filepath, frame)
+                    image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+                    image.save(filepath)
                     extracted_count += 1
 
             video.release()

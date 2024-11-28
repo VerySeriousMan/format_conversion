@@ -4,7 +4,7 @@ Project Name: format_conversion
 File Created: 2024.06.14
 Author: ZhangYuetao
 File Name: main.py
-Update: 2024.11.15
+Update: 2024.11.28
 """
 import os.path
 import shutil
@@ -13,21 +13,22 @@ import sys
 import time
 import toml
 
-from convent_ware import Ui_MainWindow
-from BinSetting import SettingsDialog
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox
 from PyQt5 import QtGui, QtCore
+import qt_material
+
+from convent_ware import Ui_MainWindow
+from BinSetting import SettingsDialog
 from utils import save_settings_to_toml
 import server_connect
-import qt_material
 
 
 class MyClass(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MyClass, self).__init__(parent)
         self.setupUi(self)
-        self.setWindowTitle("格式转化软件V1.4")
+        self.setWindowTitle("格式转化软件V1.4.1")
         self.setWindowIcon(QtGui.QIcon("xey.ico"))
 
         self.file_path = None
@@ -97,6 +98,11 @@ class MyClass(QMainWindow, Ui_MainWindow):
 
     def init_input(self):
         self.control_enabled(False)
+        self.target_format_box.setEnabled(False)
+        self.target_format_label.setEnabled(False)
+        self.nums_doubleSpinBox.setEnabled(False)
+        self.nums_label.setEnabled(False)
+        self.bin_settings_button.setEnabled(False)
         self.input_file_label.setText('请先导入待处理文件(夹)')
 
     def init_save_path(self):
@@ -106,11 +112,6 @@ class MyClass(QMainWindow, Ui_MainWindow):
 
     def control_enabled(self, enable):
         self.save_path_button.setEnabled(enable)
-        self.target_format_box.setEnabled(enable)
-        self.target_format_label.setEnabled(enable)
-        self.nums_doubleSpinBox.setEnabled(enable)
-        self.nums_label.setEnabled(enable)
-        self.bin_settings_button.setEnabled(enable)
         self.convent_image_checkBox.setEnabled(enable)
         self.video_to_image_checkBox.setEnabled(enable)
         self.bin_to_image_checkBox.setEnabled(enable)
@@ -275,6 +276,7 @@ class MyClass(QMainWindow, Ui_MainWindow):
         target_format = self.target_format_box.currentText()
         nums = None
         if self.file_path is not None and self.save_path is not None and self.process_type is not None:
+            self.control_enabled(False)
             if self.process_type == "video_to_image":
                 nums = float(self.nums_doubleSpinBox.text())
             self.worker = Worker(self.file_path, self.save_path, self.process_type, target_format, nums)
@@ -296,6 +298,7 @@ class MyClass(QMainWindow, Ui_MainWindow):
 
     def stop_animation(self):
         self.timer.stop()
+        self.control_enabled(True)
 
     def update_animation(self):
         animation_texts = ["格式转换进行中", "格式转换进行中.", "格式转换进行中..", "格式转换进行中..."]
