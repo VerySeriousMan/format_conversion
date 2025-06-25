@@ -3,11 +3,13 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-/settings/.secret.toml
 .idea/
+test/
+.vscode
 
 # C extensions
 *.so
+.pytest_cache
 
 # Distribution / packaging
 .Python
@@ -27,6 +29,7 @@ share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+__pycache__
 MANIFEST
 
 # PyInstaller
@@ -109,10 +112,8 @@ ipython_config.py
 #pdm.lock
 #   pdm stores project-wide configurations in .pdm.toml, but it is recommended to not include it
 #   in version control.
-#   https://pdm.fming.dev/latest/usage/project/#working-with-version-control
+#   https://pdm.fming.dev/#use-with-ide
 .pdm.toml
-.pdm-python
-.pdm-build/
 
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
 __pypackages__/

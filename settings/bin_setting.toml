@@ -1,4 +1,10 @@
-width = 500
-height = 315
+width = 466
+height = 600
 channels = 3
 dtype = "uint8"
+channel_order = "RGB"
+layout = "HWC"
+endianness = "little"
+normalize = false
+flip = false
+rotate = 0

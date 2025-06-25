@@ -4,38 +4,34 @@ Project Name: format_conversion
 File Created: 2024.11.14
 Author: ZhangYuetao
 File Name: server_connect.py
-Update: 2024.11.14
+Update: 2025.06.24
 """
 
 import os
 import subprocess
 import sys
 import time
-
-import toml
 import shutil
 
 import smbclient
+import toml
 
-
-def load_credentials(config_path=r"settings/.secret.toml"):
-    with open(config_path, 'r') as config_file:
-        config = toml.load(config_file)
-        credentials = config.get("credentials", {})
-        return (
-            credentials.get("server_ip"),
-            credentials.get("share_name"),
-            credentials.get("username"),
-            credentials.get("password"),
-        )
+from utils import is_file_complete
+import config
 
 
 def get_current_software_version(current_software_path):
+    """
+    获取当前软件的版本信息。
+
+    :param current_software_path: 当前软件的可执行文件路径。
+    :return: 当前软件的版本号，如果无法获取则返回 '未知'。
+     """
     file_dir = os.path.dirname(current_software_path)
-    file_path = os.path.join(file_dir, 'settings', 'software_infos.toml')
+    file_path = os.path.join(file_dir, config.SOFTWARE_INFOS_FILE)
 
     try:
-        with open(file_path, mode='r') as f:
+        with open(file_path, mode='r', encoding='utf-8') as f:
             file_content = f.read()  # 读取文件内容
 
         # 解析 TOML 文件
@@ -49,8 +45,15 @@ def get_current_software_version(current_software_path):
 
 
 def get_update_log(software_name):
+    """
+    从服务器获取指定软件的更新日志。
+
+    :param software_name: 软件的名称。
+    :return: 更新日志的内容。
+    :raises ValueError: 如果读取文件出错。
+    """
     # 从 .secret.toml 中加载配置信息
-    server_ip, share_name, username, password = load_credentials()
+    server_ip, share_name, username, password = config.load_credentials()
 
     # 注册会话
     smbclient.register_session(server_ip, username=username, password=password)
@@ -58,8 +61,7 @@ def get_update_log(software_name):
     # 构建共享路径
     share_path = f"\\\\{server_ip}\\{share_name}"
 
-    share_dir = r"数据相关软件/数据处理软件"
-    file_dir = os.path.join(share_path, share_dir)
+    file_dir = os.path.join(share_path, config.SHARE_DIR)
 
     # 读取文件内容
     try:
@@ -84,8 +86,15 @@ def get_update_log(software_name):
 
 
 def get_new_software_version(software_name):
+    """
+    从服务器获取指定软件的最新版本号。
+
+    :param software_name: 软件的名称。
+    :return: 最新版本号。
+    :raises ValueError: 如果读取文件出错。
+    """
     # 从 .secret.toml 中加载配置信息
-    server_ip, share_name, username, password = load_credentials()
+    server_ip, share_name, username, password = config.load_credentials()
 
     # 注册会话
     smbclient.register_session(server_ip, username=username, password=password)
@@ -93,8 +102,7 @@ def get_new_software_version(software_name):
     # 构建共享路径
     share_path = f"\\\\{server_ip}\\{share_name}"
 
-    share_dir = r"数据相关软件/数据处理软件"
-    file_dir = os.path.join(share_path, share_dir)
+    file_dir = os.path.join(share_path, config.SHARE_DIR)
 
     # 读取文件内容
     try:
@@ -103,13 +111,13 @@ def get_new_software_version(software_name):
         for dir_name in files:
             if software_name in dir_name and 'linux' not in dir_name:
                 software_dir = os.path.join(file_dir, dir_name)
-                toml_path = os.path.join(software_dir, 'settings', 'software_infos.toml')
+                toml_path = os.path.join(software_dir, config.SOFTWARE_INFOS_FILE)
                 break
 
         if not toml_path:
             raise FileNotFoundError("未找到对应文件")
 
-        with smbclient.open_file(toml_path, mode='r') as file:
+        with smbclient.open_file(toml_path, mode='r', encoding='utf-8') as file:
             toml_content = file.read()
 
         # 解析 TOML 文件
@@ -123,7 +131,14 @@ def get_new_software_version(software_name):
 
 
 def update_software(software_dir, software_name):
-    server_ip, share_name, username, password = load_credentials()
+    """
+    从服务器更新指定软件。
+
+    :param software_dir: 当前软件的目录。
+    :param software_name: 软件的名称。
+    :raises ValueError: 如果更新过程中出错。
+    """
+    server_ip, share_name, username, password = config.load_credentials()
 
     # 注册会话
     smbclient.register_session(server_ip, username=username, password=password)
@@ -131,8 +146,7 @@ def update_software(software_dir, software_name):
     # 构建共享路径
     share_path = f"\\\\{server_ip}\\{share_name}"
 
-    share_dir = r"数据相关软件/数据处理软件"
-    file_dir = os.path.join(share_path, share_dir)
+    file_dir = os.path.join(share_path, config.SHARE_DIR)
 
     # 读取文件内容
     try:
@@ -148,7 +162,7 @@ def update_software(software_dir, software_name):
 
         new_software_path = None
 
-        for root, dirs, files in smbclient.walk(update_software_dir):
+        for root, _, files in smbclient.walk(update_software_dir):
             files = [f for f in files if not f.startswith('.')]  # 排除隐藏文件
             for file in files:
                 if file.endswith('.exe'):
@@ -172,35 +186,15 @@ def update_software(software_dir, software_name):
         raise ValueError(f"读取文件出错: {e}")
 
 
-def is_file_complete(file_path, timeout=60):
-    """检查文件是否完全复制完成"""
-    if not os.path.exists(file_path):
-        return False
-
-    initial_size = os.path.getsize(file_path)
-    time.sleep(1)  # 等待1秒钟，给文件写入一些时间
-    final_size = os.path.getsize(file_path)
-
-    # 如果文件大小没有变化，认为文件已复制完成
-    if initial_size == final_size:
-        return True
-
-    # 如果文件大小仍在变化，则继续等待
-    start_time = time.time()
-    while time.time() - start_time < timeout:
-        time.sleep(1)
-        new_size = os.path.getsize(file_path)
-        if new_size == final_size:
-            return True
-        final_size = new_size
-
-    # 超过最大等待时间后认为文件未复制完成
-    return False
-
-
 def check_version(current_version):
+    """
+    检查当前版本是否与服务器上的最新版本一致。
+
+    :param current_version: 当前软件的版本号。
+    :return: 1 表示有新版本，0 表示版本一致，-1 表示无法获取最新版本。
+    """
     try:
-        new_version = get_new_software_version('格式转换软件')
+        new_version = get_new_software_version(config.SOFTWARE_NAME)
     except:
         new_version = '未知'
 
@@ -211,3 +205,39 @@ def check_version(current_version):
             return 0
     else:
         return -1
+
+
+def submit_problem_feedback(feedback_words, problem_type):
+    """
+    提交问题反馈到服务器。
+
+    :param feedback_words: 反馈内容。
+    :param problem_type: 问题类型。
+    :raises ValueError: 如果写入文件出错。
+    """
+    # 从 .secret.toml 中加载配置信息
+    server_ip, share_name, username, password = config.load_credentials()
+
+    # 注册会话
+    smbclient.register_session(server_ip, username=username, password=password)
+
+    # 构建共享路径
+    share_path = f"\\\\{server_ip}\\{share_name}"
+
+    problem_share_dir = config.PROBLEM_SHARE_DIR
+    file_dir = os.path.join(share_path, problem_share_dir)
+
+    # 确保目录存在
+    os.makedirs(file_dir, exist_ok=True)
+
+    # 读取文件内容
+    try:
+        current_time = time.strftime("%Y-%m-%d_%H-%M-%S")
+
+        file_path = os.path.join(file_dir, f"{problem_type}_{current_time}.txt")
+
+        with smbclient.open_file(file_path, mode='w') as file:
+            file.write(feedback_words)
+
+    except Exception as e:
+        raise ValueError(f"写入文件出错: {e}")

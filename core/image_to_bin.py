@@ -1,23 +1,30 @@
 # -*- coding: utf-8 -*-
-
 """
 Project Name: format_conversion
 File Created: 2024.10.29
 Author: ZhangYuetao
 File Name: image_to_bin.py
-Update: 2024.10.30
+Update: 2025.06.24
 """
 
-from PIL import Image
 import os
 import numpy as np
-from utils import is_image
+
+from PIL import Image
+import zyt_validation_utils
 
 
 def image_to_bin(input_path, output_path, error_label=None):
+    """
+    图像转换为bin文件。
+
+    :param input_path: 输入图像地址。
+    :param output_path: 转换后bin文件保存地址。
+    :param error_label: 错误信息信号，用于在 GUI 中显示错误信息，默认为 None。
+    """
     try:
-        if not is_image(input_path):
-            return
+        if not zyt_validation_utils.is_image(input_path, speed="fast"):
+            raise ValueError("不支持的图像格式")
 
         # 打开图片并转换为指定通道数
         with Image.open(input_path) as img:
@@ -51,7 +58,14 @@ def image_to_bin(input_path, output_path, error_label=None):
 
 
 def images_to_bins(input_folder, output_folder, error_label=None):
-    for root, dirs, files in os.walk(input_folder):
+    """
+    图像批量转换为bin文件。
+
+    :param input_folder: 输入图像文件夹地址。
+    :param output_folder: 转换后bin文件保存地址。
+    :param error_label: 错误信息信号，用于在 GUI 中显示错误信息，默认为 None。
+    """
+    for root, _, files in os.walk(input_folder):
         for file in files:
             input_path = os.path.join(root, file)
             output_path = root.replace(input_folder, output_folder)
